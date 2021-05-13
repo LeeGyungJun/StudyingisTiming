@@ -4,11 +4,13 @@ import android.content.Context
 import android.os.Handler
 import android.os.Message
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.layout_b.view.*
 import kotlin.concurrent.thread
 
-class CustomB(context: Context?) : LinearLayoutCompat(context!!) {
+class CustomB(context: Context?) : ConstraintLayout(context!!) {
     //시작 변수
     var started = false
     //시간 변수
@@ -19,9 +21,15 @@ class CustomB(context: Context?) : LinearLayoutCompat(context!!) {
         addView(view)
 
         //공부 타이밍 버튼
-        btnStart.setOnClickListener { start() }
+        btnStart.setOnClickListener {
+            start()
+            Toast.makeText(getContext(), "타이머를 시작합니다.", Toast.LENGTH_SHORT).show()
+        }
         //쉬는 타이밍 버튼
-        btnPause.setOnClickListener { pause() }
+        btnPause.setOnClickListener {
+            pause()
+            Toast.makeText(getContext(), "타이머를 정지합니다.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     //핸들러 메시지들

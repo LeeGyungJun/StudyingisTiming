@@ -6,8 +6,6 @@ import androidx.viewpager.widget.PagerAdapter
 
 class CustomPagerAdapter : PagerAdapter() {
 
-    //데이터베이스 연결
-    var helper:DBHelper? = null
     var views = listOf<View>()
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {

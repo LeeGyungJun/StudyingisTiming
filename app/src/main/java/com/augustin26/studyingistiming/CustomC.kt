@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
+import kotlinx.android.synthetic.main.item_schedule.view.*
 import kotlinx.android.synthetic.main.layout_c.view.*
 import java.text.SimpleDateFormat
 import java.util.*

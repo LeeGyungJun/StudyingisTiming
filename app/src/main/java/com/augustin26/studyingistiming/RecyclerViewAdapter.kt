@@ -2,6 +2,7 @@ package com.augustin26.studyingistiming
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ class RecyclerViewAdapter(val customC: CustomC) : RecyclerView.Adapter<ViewHolde
     val baseCalendar = BaseCalendar()
 
     init {
+        //달력 초기화 함수
         baseCalendar.initBaseCalendar {
             refreshView(it)
         }
@@ -30,13 +32,21 @@ class RecyclerViewAdapter(val customC: CustomC) : RecyclerView.Adapter<ViewHolde
 
     override fun onBindViewHolder(holder: ViewHolderHelper, position: Int) {
 
+        //position은 0부터 시작한다.
+        //position이 7로 나누어 떨어지면 tv_date 색상을 빨간색으로 (일요일)
         if (position % BaseCalendar.DAYS_OF_WEEK == 0) holder.itemView.tv_date.setTextColor(Color.parseColor("#ff1200"))
         else holder.itemView.tv_date.setTextColor(Color.parseColor("#676d6e"))
 
+        //position < 이전 달의 마지막날짜 이거나
+        //position >= 이전 달의 마지막날짜 + 현재 달의 마지막 날짜 이면 투명도를 0.3
         if (position < baseCalendar.prevMonthTailOffset || position >= baseCalendar.prevMonthTailOffset + baseCalendar.currentMonthMaxDate) {
             holder.itemView.tv_date.alpha = 0.3f
         } else {
             holder.itemView.tv_date.alpha = 1f
+        }
+
+        if (baseCalendar.thisMonthFlag == true && baseCalendar.data[position] == baseCalendar.nowDay) {
+            holder.itemView.tv_date.setTextColor(Color.parseColor("#0040FF"))
         }
         holder.itemView.tv_date.text = baseCalendar.data[position].toString()
     }

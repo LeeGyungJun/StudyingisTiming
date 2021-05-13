@@ -2,34 +2,32 @@ package com.augustin26.studyingistiming
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
 import androidx.appcompat.widget.LinearLayoutCompat
-import io.realm.Realm
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.room.Room
 import kotlinx.android.synthetic.main.layout_a.view.*
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CustomA(context: Context?) : LinearLayoutCompat(context!!) {
+class CustomA(context: Context?) : ConstraintLayout(context!!) {
 
-    var realmManager: RealmManager
+    var helper : StudyDatabase? = null
 
     init {
         val view = LayoutInflater.from(context).inflate(R.layout.layout_a, this, false)
         addView(view)
 
-        realmManager = RealmManager(Realm.getDefaultInstance())
+        helper = Room.databaseBuilder(getContext(), StudyDatabase::class.java, "study_db")
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build()
 
-        val Dday = realmManager.findDay(1)?.day
-        txtDday.text = Dday.toString()
-        Log.d("init","Dday : $Dday")
-        val DdayContent = realmManager.findContent(1)?.content
-        txtDdayContent.text = DdayContent
-        Log.d("init", "DdayContent : $DdayContent")
+        val test = helper?.studyDAO()?.getDay()
+        Log.e("init", "$test")
 
         //디데이 날짜 설정 클릭 이벤트
         view.txtDday.setOnClickListener {
@@ -51,9 +49,6 @@ class CustomA(context: Context?) : LinearLayoutCompat(context!!) {
                 Log.d("Dday", "${today}")
 
                 var D_day = (endDate - today) / (24 * 60 * 60 * 1000)
-                val data = Dday()
-                data.day = D_day
-                realmManager.updateDay(1, data)
 
                 if(D_day > 0) {
                     txtDday.text = "D-${D_day}"
@@ -75,9 +70,6 @@ class CustomA(context: Context?) : LinearLayoutCompat(context!!) {
 
             builder.setView(dialogView)
                 .setPositiveButton("확인") { dialogInterface, i ->
-                    val data = DdayContent()
-                    data.content = dialogText.toString()
-                    realmManager.updateContent(1, data)
                     txtDdayContent.text = dialogText.text.toString()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
