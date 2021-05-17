@@ -34,8 +34,11 @@ class RecyclerViewAdapter(val customC: CustomC) : RecyclerView.Adapter<ViewHolde
 
         //position은 0부터 시작한다.
         //position이 7로 나누어 떨어지면 tv_date 색상을 빨간색으로 (일요일)
-        if (position % BaseCalendar.DAYS_OF_WEEK == 0) holder.itemView.tv_date.setTextColor(Color.parseColor("#ff1200"))
-        else holder.itemView.tv_date.setTextColor(Color.parseColor("#676d6e"))
+        if (position % BaseCalendar.DAYS_OF_WEEK == 0) {
+            holder.itemView.tv_date.setTextColor(Color.parseColor("#ff1200"))
+        }else{
+            holder.itemView.tv_date.setTextColor(Color.parseColor("#676d6e"))
+        }
 
         //position < 이전 달의 마지막날짜 이거나
         //position >= 이전 달의 마지막날짜 + 현재 달의 마지막 날짜 이면 투명도를 0.3
@@ -46,8 +49,9 @@ class RecyclerViewAdapter(val customC: CustomC) : RecyclerView.Adapter<ViewHolde
         }
 
         if (baseCalendar.thisMonthFlag == true && baseCalendar.data[position] == baseCalendar.nowDay) {
-            holder.itemView.tv_date.setTextColor(Color.parseColor("#0040FF"))
+            holder.itemView.tv_date.setTextColor(Color.parseColor("#ff7f00"))
         }
+
         holder.itemView.tv_date.text = baseCalendar.data[position].toString()
     }
 

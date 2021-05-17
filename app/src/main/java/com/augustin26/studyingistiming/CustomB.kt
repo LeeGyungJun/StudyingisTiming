@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.room.Room
 import kotlinx.android.synthetic.main.layout_b.view.*
 import kotlin.concurrent.thread
 
@@ -31,6 +32,7 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
             Toast.makeText(getContext(), "타이머를 정지합니다.", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     //핸들러 메시지들
     val START_TIMER = 51

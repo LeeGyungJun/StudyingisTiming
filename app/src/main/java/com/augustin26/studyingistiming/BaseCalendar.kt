@@ -21,9 +21,11 @@ class BaseCalendar {
     
     val now: Long = System.currentTimeMillis()
     val date = Date(now)
+    val dateFormat_Year = SimpleDateFormat("yyyy", Locale("ko", "KR"))
     val dateFormat_Month = SimpleDateFormat("M", Locale("ko", "KR"))
     val dateFormat_Day = SimpleDateFormat("d", Locale("ko", "KR"))
 
+    val nowYear = dateFormat_Year.format(date).toInt()
     val nowMonth = dateFormat_Month.format(date).toInt()
     val nowDay = dateFormat_Day.format(date).toInt()
 
@@ -81,8 +83,7 @@ class BaseCalendar {
         //달력을 현재 달의 1일로 설정
         calendar.set(Calendar.DATE, 1)
 
-        thisMonthFlag = calendar.get(Calendar.MONTH) == nowMonth-1
-        Log.e("cal","${nowDay}")
+        thisMonthFlag = nowYear == calendar.get(Calendar.YEAR) && nowMonth == calendar.get(Calendar.MONTH)+1
 
         //현재 달의 마지막 날짜
         //getActualMaximum() : 이 캘린더의 시간 값이 주어지면 지정된 캘린더 필드가 가질 수있는 최대 값을 리턴

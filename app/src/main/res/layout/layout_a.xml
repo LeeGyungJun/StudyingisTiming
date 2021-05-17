@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:maxLines="2"
+        android:padding="8dp"
         android:text="디데이"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"

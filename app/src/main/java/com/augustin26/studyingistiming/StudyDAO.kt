@@ -9,12 +9,23 @@ import androidx.room.Query
 @Dao
 interface StudyDAO {
 
-    @Query("select * from dday")
-    fun getDay() : List<StudyEntity>
+    //디데이
+    @Query("select * from dday_day")
+    fun getDay() : List<Dday>
+
+    //디데이 내용
+    @Query("select * from dday_content")
+    fun getContent() : List<DdayContent>
 
     @Insert(onConflict = REPLACE)
-    fun insertDday(dday: StudyEntity)
+    fun insertDay(day: Dday)
+
+    @Insert(onConflict = REPLACE)
+    fun insertContent(content: DdayContent)
 
     @Delete
-    fun deleteDay(dday: StudyEntity)
+    fun deleteDay(day: Dday)
+
+    @Delete
+    fun deleteContent(content: DdayContent)
 }
