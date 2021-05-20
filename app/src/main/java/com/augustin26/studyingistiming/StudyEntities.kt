@@ -21,3 +21,12 @@ data class DdayContent (
     @ColumnInfo
     var content: String? = null
 )
+
+@Entity(tableName = "today_time")
+data class TodayTime (
+    @PrimaryKey
+    @ColumnInfo
+    var id: Long? = null,
+    @ColumnInfo
+    var time: Int? = null
+)
