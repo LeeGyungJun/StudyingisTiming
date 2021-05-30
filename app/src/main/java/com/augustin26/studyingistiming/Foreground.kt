@@ -19,7 +19,6 @@ class Foreground : Service() {
     val CHANNEL_ID = "FGS153"
     val NOTI_ID = 153
     var started = false
-    var time = 0
 
     //Room 변수
     var helper : StudyDatabase? = null
@@ -41,15 +40,9 @@ class Foreground : Service() {
             .fallbackToDestructiveMigration()
             .build()
 
-        val data = helper?.studyDAO()?.getTime()
-        var time: Int = if (data!!.size > 0) {
-            data!!.get(0).time!!
-        }else{
-            0
-        }
 
         when (intent?.action) {
-            CustomB.Actions.START_FOREGROUND -> startForegroundService(time, helper!!)
+            CustomB.Actions.START_FOREGROUND -> startForegroundService(helper!!)
             CustomB.Actions.STOP_FOREGROUND -> stopForegroundService()
         }
         return super.onStartCommand(intent, flags, startId)
@@ -59,14 +52,20 @@ class Foreground : Service() {
         return Binder()
     }
 
-    private fun startForegroundService(time:Int, helper: StudyDatabase) {
+    private fun startForegroundService(helper: StudyDatabase) {
         createNotificationChannel()
-        var time = time
         started = true
         thread(start=true) {
             while (started) {
                 Thread.sleep(1000)
-                time++
+
+                val data = helper?.studyDAO()?.getTime()
+                var time: Int? = if (data!!.size > 0) {
+                    data!!.get(0).time!!
+                }else{
+                    0
+                }
+                time = time!! + 1
                 helper.studyDAO().insertTime(TodayTime(1, time))
 
                 var notiTitle = when (time % 4) {

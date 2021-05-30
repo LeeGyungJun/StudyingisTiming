@@ -49,7 +49,7 @@ class RecyclerViewAdapter(val customC: CustomC) : RecyclerView.Adapter<ViewHolde
         }
 
         if (baseCalendar.thisMonthFlag == true && baseCalendar.data[position] == baseCalendar.nowDay) {
-            holder.itemView.tv_date.setTextColor(Color.parseColor("#ff7f00"))
+            holder.itemView.tv_date.setTextColor(Color.parseColor("#380B61"))
         }
 
         holder.itemView.tv_date.text = baseCalendar.data[position].toString()

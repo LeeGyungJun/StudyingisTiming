@@ -45,6 +45,14 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
             content = d2!!.get(0)?.content
         }
 
+        //어제 내 공부시간
+        val d3 = helper?.studyDAO()?.getStudy()
+        var yesterdayStudyTime: Int? = null
+        if (d3!!.size > 0) {
+            yesterdayStudyTime = d3[d3!!.lastIndex]?.time
+        }
+
+        //dday text 초기화
         if (day != null) {
             if(day > 0) {
                 txtDday.text = "D-${day}"
@@ -54,7 +62,14 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
                 txtDday.text = "D-day"
             }
         }
+
+        //dday content text 초기화
         if (content != null) txtDdayContent.text = content
+
+        //yesterdayStudyTime text 초기화
+        if (yesterdayStudyTime != null) {
+            txtYesterdayTime.text = formatTime(yesterdayStudyTime)
+        }
 
         //디데이 날짜 설정 클릭 이벤트
         view.txtDday.setOnClickListener {
@@ -108,5 +123,16 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
                 }
                 .show()
         }
+    }
+
+    //시간 포맷 함수
+    fun formatTime(time:Int) : String {
+        val hour = String.format("%d", time/(60*60))
+        val minute = String.format("%d", (time/60)%60)
+        val second = String.format("%d", time%60)
+        if (hour == "0") {
+            return "${minute}분 ${second}초"
+        }
+        return "${hour}시간 ${minute}분 ${second}초"
     }
 }

@@ -1,7 +1,9 @@
 package com.augustin26.studyingistiming
 
+import android.media.Image
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 
 class CustomPagerAdapter : PagerAdapter() {
@@ -30,9 +32,9 @@ class CustomPagerAdapter : PagerAdapter() {
 
     override fun getPageTitle(position: Int): CharSequence? {
         return when (position) {
-            0 -> "A"
-            1 -> "B"
-            else -> "C"
+            0 -> "Home"
+            1 -> "Study"
+            else -> "Calendar"
         }
     }
 }

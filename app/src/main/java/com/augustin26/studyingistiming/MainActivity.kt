@@ -1,5 +1,8 @@
 package com.augustin26.studyingistiming
 
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -22,5 +25,11 @@ class MainActivity : AppCompatActivity() {
         adapter.views = views
         //viewPager에 adapter를 연결한다.
         viewPager.adapter = adapter
+
+        val br : BroadcastReceiver = StudyReceiver()
+        val filter = IntentFilter().apply{
+            addAction("android.intent.action.DATE_CHANGED")
+        }
+        registerReceiver(br, filter)
     }
 }

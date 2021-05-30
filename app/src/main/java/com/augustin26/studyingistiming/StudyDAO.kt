@@ -37,4 +37,16 @@ interface StudyDAO {
     fun insertTime(time: TodayTime)
 
 
+
+    //일별 공부 데이터
+    @Query("select * from study_data")
+    fun getStudy() : List<StudyData>
+
+    @Insert(onConflict = REPLACE)
+    fun insertStudy(data: StudyData)
+
+    @Delete
+    fun deleteStudy(data: StudyData)
+
+
 }

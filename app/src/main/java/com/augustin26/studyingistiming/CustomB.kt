@@ -2,8 +2,10 @@ package com.augustin26.studyingistiming
 
 import android.app.Activity
 import android.app.ActivityManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -16,16 +18,18 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
         addView(view)
 
         btnStart.setOnClickListener {
-            serviceStart(view)
+            serviceStart()
         }
 
         btnPause.setOnClickListener {
-            serviceStop(view)
+            serviceStop()
         }
+
+
     }
 
 
-    private fun serviceStart(view: View) {
+    private fun serviceStart() {
         if (isServiceRunningCheck()) {
             return
         }else{
@@ -35,10 +39,14 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
         }
     }
 
-    fun serviceStop(view: View) {
-        val intent = Intent(context, Foreground::class.java)
-        intent.action = Actions.STOP_FOREGROUND
-        ContextCompat.startForegroundService(context, intent)
+    fun serviceStop() {
+        if (isServiceRunningCheck()) {
+            val intent = Intent(context, Foreground::class.java)
+            intent.action = Actions.STOP_FOREGROUND
+            ContextCompat.startForegroundService(context, intent)
+        }else{
+            return
+        }
     }
 
     fun isServiceRunningCheck() : Boolean {

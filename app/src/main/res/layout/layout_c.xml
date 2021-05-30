@@ -2,19 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/layout_radius_first"
     android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
+        android:layout_width="380dp"
+        android:layout_height="100dp"
+        android:background="@drawable/calendar_radius_first"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="16dp">
 
         <TextView
             android:id="@+id/tv_prev_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/cafe24oneprettynight"
             android:text="  PREV  "
             android:textSize="15dp" />
 
@@ -24,29 +34,34 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
+            android:fontFamily="@font/cafe24oneprettynight"
             android:text="2019  03"
-            android:textSize="20dp" />
+            android:textSize="30dp" />
 
         <TextView
             android:id="@+id/tv_next_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/cafe24oneprettynight"
             android:text="  NEXT  "
             android:textSize="15dp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="348dp"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:orientation="vertical">
+        android:background="@drawable/calendar_radius_second"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:fontFamily="@font/cafe24oneprettynight">
 
         <LinearLayout
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:background="#e0e7ee"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:fontFamily="@font/cafe24oneprettynight">
 
             <TextView
                 android:layout_width="0dp"
@@ -55,8 +70,9 @@
                 android:gravity="center"
                 android:text="SUN"
                 android:textColor="#969a9b"
-                android:textSize="10dp"
-                android:textStyle="bold" />
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/cafe24oneprettynight" />
 
             <TextView
                 android:layout_width="0dp"
@@ -65,8 +81,9 @@
                 android:gravity="center"
                 android:text="MON"
                 android:textColor="#969a9b"
-                android:textSize="10dp"
-                android:textStyle="bold" />
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/cafe24oneprettynight"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -75,8 +92,9 @@
                 android:gravity="center"
                 android:text="TUE"
                 android:textColor="#969a9b"
-                android:textSize="10dp"
-                android:textStyle="bold" />
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/cafe24oneprettynight" />
 
             <TextView
                 android:layout_width="0dp"
@@ -85,8 +103,9 @@
                 android:gravity="center"
                 android:text="WED"
                 android:textColor="#969a9b"
-                android:textSize="10dp"
-                android:textStyle="bold" />
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/cafe24oneprettynight"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -95,8 +114,9 @@
                 android:gravity="center"
                 android:text="THU"
                 android:textColor="#969a9b"
-                android:textSize="10dp"
-                android:textStyle="bold" />
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/cafe24oneprettynight"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -105,8 +125,9 @@
                 android:gravity="center"
                 android:text="FRI"
                 android:textColor="#969a9b"
-                android:textSize="10dp"
-                android:textStyle="bold" />
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/cafe24oneprettynight"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -115,8 +136,9 @@
                 android:gravity="center"
                 android:text="SAT"
                 android:textColor="#969a9b"
-                android:textSize="10dp"
-                android:textStyle="bold" />
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/cafe24oneprettynight"/>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
