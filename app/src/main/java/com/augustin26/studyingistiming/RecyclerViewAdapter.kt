@@ -89,7 +89,8 @@ class RecyclerViewAdapter(val customC: CustomC) : RecyclerView.Adapter<ViewHolde
             holder.itemView.tv_date.alpha = 1f
         }
 
-        if (position > baseCalendar.prevMonthTailOffset && position <= baseCalendar.prevMonthTailOffset + baseCalendar.currentMonthMaxDate) {
+        Log.e("cal","${baseCalendar.prevMonthTailOffset} , ${baseCalendar.prevMonthTailOffset+baseCalendar.currentMonthMaxDate}")
+        if (position >= baseCalendar.prevMonthTailOffset && position < baseCalendar.prevMonthTailOffset + baseCalendar.currentMonthMaxDate) {
             if (baseCalendar.thisMonthFlag && baseCalendar.data[position] == baseCalendar.nowDay) {
                 //holder.itemView.tv_date.setTextColor(Color.parseColor("#380B61"))
                 holder.itemView.tv_date.setTextColor(Color.parseColor("#FFFFFF"))
