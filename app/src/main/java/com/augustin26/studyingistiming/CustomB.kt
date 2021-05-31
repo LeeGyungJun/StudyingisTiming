@@ -6,8 +6,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.layout_b.view.*
@@ -24,8 +26,6 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
         btnPause.setOnClickListener {
             serviceStop()
         }
-
-
     }
 
 
@@ -36,6 +36,7 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
             val intent = Intent(context, Foreground::class.java)
             intent.action = Actions.START_FOREGROUND
             ContextCompat.startForegroundService(context, intent)
+            Toast.makeText(context,"공부 시작!!!",Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -44,6 +45,7 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
             val intent = Intent(context, Foreground::class.java)
             intent.action = Actions.STOP_FOREGROUND
             ContextCompat.startForegroundService(context, intent)
+            Toast.makeText(context,"쉬는 시간!!!",Toast.LENGTH_SHORT).show()
         }else{
             return
         }

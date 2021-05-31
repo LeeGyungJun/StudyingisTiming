@@ -42,11 +42,13 @@ interface StudyDAO {
     @Query("select * from study_data")
     fun getStudy() : List<StudyData>
 
+    @Query("select * from study_data where year = :year and month = :month")
+    fun getStudyDate(year: Int, month: Int) : List<StudyData>
+
     @Insert(onConflict = REPLACE)
     fun insertStudy(data: StudyData)
 
     @Delete
     fun deleteStudy(data: StudyData)
-
-
+    
 }

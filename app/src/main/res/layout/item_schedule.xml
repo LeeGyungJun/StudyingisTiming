@@ -7,12 +7,14 @@
         android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:layout_marginStart="4dp"
-        android:textSize="18dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/cafe24oneprettynight"
+        android:gravity="center"
+        android:textAlignment="center"
         android:textColor="#676d6e"
-        android:textStyle="bold"
-        android:layout_marginLeft="2dp"
-        android:fontFamily="@font/cafe24oneprettynight" />
+        android:textSize="18dp"
+        android:textStyle="bold" />
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.RoomOpenHelper
@@ -23,11 +24,10 @@ class Foreground : Service() {
     //Room 변수
     var helper : StudyDatabase? = null
 
-
     private fun createNotificationChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(CHANNEL_ID,
-                "FOREGROUND", NotificationManager.IMPORTANCE_DEFAULT)
+                "FOREGROUND", NotificationManager.IMPORTANCE_LOW)
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(serviceChannel)
         }
@@ -40,11 +40,11 @@ class Foreground : Service() {
             .fallbackToDestructiveMigration()
             .build()
 
-
         when (intent?.action) {
             CustomB.Actions.START_FOREGROUND -> startForegroundService(helper!!)
             CustomB.Actions.STOP_FOREGROUND -> stopForegroundService()
         }
+        helper!!.close()
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -60,11 +60,13 @@ class Foreground : Service() {
                 Thread.sleep(1000)
 
                 val data = helper?.studyDAO()?.getTime()
+
                 var time: Int? = if (data!!.size > 0) {
                     data!!.get(0).time!!
                 }else{
                     0
                 }
+
                 time = time!! + 1
                 helper.studyDAO().insertTime(TodayTime(1, time))
 
@@ -96,6 +98,9 @@ class Foreground : Service() {
                     .setAutoCancel(true)
                     .setCustomContentView(layout)
                     .build()
+
+                //val notificationManager =  NotificationManagerCompat.from(this)
+                //notificationManager.notify(NOTI_ID, notification.build())
 
                 startForeground(NOTI_ID, notification)
                 Log.d("서비스","$time")

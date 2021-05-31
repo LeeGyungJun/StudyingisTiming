@@ -37,8 +37,12 @@ data class StudyData (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo
     var id: Long? = null,
-    @ColumnInfo(name = "date")
-    var date_info : String? = null,
+    @ColumnInfo
+    var year : Int? = null,
+    @ColumnInfo
+    var month : Int? = null,
+    @ColumnInfo
+    var day : Int? = null,
     @ColumnInfo
     var time: Int? = null
 )

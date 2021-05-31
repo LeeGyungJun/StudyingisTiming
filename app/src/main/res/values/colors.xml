@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="phase1">#F6CECE</color>
+    <color name="phase2">#F5A9A9</color>
+    <color name="phase3">#F78181</color>
+    <color name="phase4">#FA5858</color>
+    <color name="phase5">#FE2E2E</color>
 </resources>

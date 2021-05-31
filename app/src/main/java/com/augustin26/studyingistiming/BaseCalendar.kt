@@ -3,12 +3,14 @@ package com.augustin26.studyingistiming
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import java.text.SimpleDateFormat
 import java.time.LocalDate.now
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class BaseCalendar {
+class BaseCalendar() {
 
     companion object {
         //달력의 가로 (일~토)
@@ -18,16 +20,16 @@ class BaseCalendar {
     }
 
     val calendar = Calendar.getInstance()
-    
+
     val now: Long = System.currentTimeMillis()
     val date = Date(now)
-    val dateFormat_Year = SimpleDateFormat("yyyy", Locale("ko", "KR"))
-    val dateFormat_Month = SimpleDateFormat("M", Locale("ko", "KR"))
-    val dateFormat_Day = SimpleDateFormat("d", Locale("ko", "KR"))
+    val dateFormatYear = SimpleDateFormat("yyyy", Locale("ko", "KR"))
+    val dateFormatMonth = SimpleDateFormat("M", Locale("ko", "KR"))
+    val dateFormatDay = SimpleDateFormat("d", Locale("ko", "KR"))
 
-    val nowYear = dateFormat_Year.format(date).toInt()
-    val nowMonth = dateFormat_Month.format(date).toInt()
-    val nowDay = dateFormat_Day.format(date).toInt()
+    val nowYear = dateFormatYear.format(date).toInt()
+    val nowMonth = dateFormatMonth.format(date).toInt()
+    val nowDay = dateFormatDay.format(date).toInt()
 
     //이전 달의 마지막 날짜
     var prevMonthTailOffset = 0
@@ -43,7 +45,7 @@ class BaseCalendar {
     var data = arrayListOf<Int>()
 
     init {
-        //현재 시간을 calendar.time에 넣는다.
+        //현재 시간을 calendar.time에 넣는다. (setTime 함수)
         calendar.time = Date()
     }
 
@@ -83,6 +85,7 @@ class BaseCalendar {
         //달력을 현재 달의 1일로 설정
         calendar.set(Calendar.DATE, 1)
 
+        //현재 달인지 확인하는 플래그
         thisMonthFlag = nowYear == calendar.get(Calendar.YEAR) && nowMonth == calendar.get(Calendar.MONTH)+1
 
         //현재 달의 마지막 날짜
