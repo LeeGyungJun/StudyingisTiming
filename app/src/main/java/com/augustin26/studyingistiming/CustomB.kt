@@ -2,19 +2,16 @@ package com.augustin26.studyingistiming
 
 import android.app.Activity
 import android.app.ActivityManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.layout_b.view.*
 
 class CustomB(context: Context?) : ConstraintLayout(context!!) {
+
     init {
         val view = LayoutInflater.from(context).inflate(R.layout.layout_b, this, false)
         addView(view)
@@ -54,7 +51,7 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
     fun isServiceRunningCheck() : Boolean {
         val manager: ActivityManager = context.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
         for (service: ActivityManager.RunningServiceInfo in manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("com.augustin26.studyingistiming.Foreground".equals(service.service.getClassName())) {
+            if ("com.augustin26.studyingistiming.Foreground" == service.service.className) {
                 return true
             }
         }
