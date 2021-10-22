@@ -78,7 +78,7 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
             var month = calendar.get(Calendar.MONTH)
             var day = calendar.get(Calendar.DAY_OF_MONTH)
             var listener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                val dateFormat = SimpleDateFormat("yyyyMd")
+                val dateFormat = SimpleDateFormat("yyyyMMdd")
                 val endDate = dateFormat.parse("${year}${month+1}${day}").time
                 Log.d("Dday","${year}${month+1}${day}")
 
@@ -91,6 +91,8 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
                 Log.d("Dday", "${today}")
 
                 var D_day = (endDate - today) / (24 * 60 * 60 * 1000)
+                Log.d("Dday", "e ${endDate/ (24 * 60 * 60 * 1000)}")
+                Log.d("Dday", "t ${today/ (24 * 60 * 60 * 1000)}")
 
                 val data = Dday(1,D_day)
                 helper?.studyDAO()?.insertDay(data)

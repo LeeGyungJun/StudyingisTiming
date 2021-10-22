@@ -1,14 +1,13 @@
 package com.augustin26.studyingistiming
 
 import android.content.BroadcastReceiver
-import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_a.view.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +32,12 @@ class MainActivity : AppCompatActivity() {
         adapter.views = views
         //viewPager에 adapter를 연결한다.
         viewPager.adapter = adapter
+        tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+        tabLayout.setupWithViewPager(viewPager)
+        tabLayout.getTabAt(0)!!.setIcon(R.drawable.home).text = ""
+        tabLayout.getTabAt(1)!!.setIcon(R.drawable.book).text = ""
+        tabLayout.getTabAt(2)!!.setIcon(R.drawable.calendar).text = ""
         super.onResume()
     }
+
 }

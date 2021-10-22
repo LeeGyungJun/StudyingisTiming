@@ -57,15 +57,15 @@ class RecyclerViewAdapter(val customC: CustomC) : RecyclerView.Adapter<ViewHolde
                 if(position - baseCalendar.prevMonthTailOffset + 1 == data.get(i).day) {
                     when (data.get(i).time) {
                         //1단 : 공부시간이 1시간 ~ 3시간
-                        in 3600..10799 -> holder.itemView.setBackgroundColor(customC.context.resources.getColor(R.color.phase1))
+                        in 3600..10799 -> holder.itemView.background = customC.context.resources.getDrawable(R.drawable.phase1)
                         //2단 : 공부시간이 3시간 ~ 5시간
-                        in 10800..17999 -> holder.itemView.setBackgroundColor(customC.context.resources.getColor(R.color.phase2))
+                        in 10800..17999 -> holder.itemView.background = customC.context.resources.getDrawable(R.drawable.phase2)
                         //3단 : 공부시간이 5시간 ~ 7시간
-                        in 18000..25199 -> holder.itemView.setBackgroundColor(customC.context.resources.getColor(R.color.phase3))
+                        in 18000..25199 -> holder.itemView.background = customC.context.resources.getDrawable(R.drawable.phase3)
                         //4단 : 공부시간이 7시간 ~ 9시간
-                        in 25200..32399 -> holder.itemView.setBackgroundColor(customC.context.resources.getColor(R.color.phase4))
+                        in 25200..32399 -> holder.itemView.background = customC.context.resources.getDrawable(R.drawable.phase4)
                         //5단 : 공부시간이 9시간 ~
-                        in 32400..99999 -> holder.itemView.setBackgroundColor(customC.context.resources.getColor(R.color.phase5))
+                        in 32400..99999 -> holder.itemView.background = customC.context.resources.getDrawable(R.drawable.phase5)
                     }
                 }
             }
