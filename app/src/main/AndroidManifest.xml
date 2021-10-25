@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyingisTiming">
         <receiver
-            android:name=".StudyReceiver"
+            android:name=".receiver.StudyReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -23,7 +23,7 @@
         </receiver>
 
         <receiver
-            android:name=".RebootRecever"
+            android:name=".receiver.RebootReceiver"
             android:enabled="true"
             android:exported="false"
             android:process=":remote">
@@ -32,18 +32,18 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".AlarmRecever"/>
+        <receiver android:name=".receiver.AlarmReceiver"/>
 
         <service
-            android:name=".Foreground"
+            android:name=".service.Foreground"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".RestartForeground"
+            android:name=".service.RestartForeground"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

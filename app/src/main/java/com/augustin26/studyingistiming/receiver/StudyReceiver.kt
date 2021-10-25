@@ -1,4 +1,4 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,7 +6,9 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.room.Room
-import kotlinx.android.synthetic.main.layout_a.view.*
+import com.augustin26.studyingistiming.StudyData
+import com.augustin26.studyingistiming.db.StudyDatabase
+import com.augustin26.studyingistiming.TodayTime
 import java.text.SimpleDateFormat
 import java.util.*
 

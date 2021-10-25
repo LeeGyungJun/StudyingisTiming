@@ -1,4 +1,4 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.ui
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -8,6 +8,10 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.room.*
+import com.augustin26.studyingistiming.Dday
+import com.augustin26.studyingistiming.DdayContent
+import com.augustin26.studyingistiming.R
+import com.augustin26.studyingistiming.db.StudyDatabase
 import kotlinx.android.synthetic.main.layout_a.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,26 +34,26 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
         //dday_day 테이블을 조회하여 d1에 저장
         val d1 = helper?.studyDAO()?.getDay()
         var day: Long? = null
-        if (d1!!.size > 0) {
+        if (d1!!.isNotEmpty()) {
             //조회한 테이블(배열)의 사이즈가 0보다 크면
             //테이블의 0번째 컬럼(Dday클래스)의 day 값을 day에 저장한다.
-            day = d1!!.get(0)?.day
+            day = d1[0].day
         }
 
         //dday_content 테이블을 조회하여 d2에 저장
         val d2 = helper?.studyDAO()?.getContent()
         var content: String? = null
-        if (d2!!.size > 0) {
+        if (d2!!.isNotEmpty()) {
             //조회한 테이블(배열)의 사이즈가 0보다 크면
             //테이블의 0번째 컬럼(DdayContent클래스)의 content 값을 content에 저장한다.
-            content = d2!!.get(0)?.content
+            content = d2[0].content
         }
 
         //어제 내 공부시간
         val d3 = helper?.studyDAO()?.getStudy()
         var yesterdayStudyTime: Int? = null
         if (d3!!.size > 0) {
-            yesterdayStudyTime = d3[d3!!.lastIndex]?.time
+            yesterdayStudyTime = d3[d3.lastIndex].time
         }
 
         //dday text 초기화
@@ -73,11 +77,11 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
 
         //디데이 날짜 설정 클릭 이벤트
         view.txtDday.setOnClickListener {
-            var calendar = Calendar.getInstance()
-            var year = calendar.get(Calendar.YEAR)
-            var month = calendar.get(Calendar.MONTH)
-            var day = calendar.get(Calendar.DAY_OF_MONTH)
-            var listener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val listener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
                 val dateFormat = SimpleDateFormat("yyyyMMdd")
                 val endDate = dateFormat.parse("${year}${month+1}${day}").time
                 Log.d("Dday","${year}${month+1}${day}")

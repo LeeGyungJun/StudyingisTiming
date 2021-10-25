@@ -1,9 +1,11 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.db
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.augustin26.studyingistiming.Dday
+import com.augustin26.studyingistiming.DdayContent
+import com.augustin26.studyingistiming.StudyData
+import com.augustin26.studyingistiming.TodayTime
 
 @Database(entities = [Dday::class, DdayContent::class, TodayTime::class, StudyData::class], version = 11, exportSchema = false)
 abstract class StudyDatabase: RoomDatabase() {

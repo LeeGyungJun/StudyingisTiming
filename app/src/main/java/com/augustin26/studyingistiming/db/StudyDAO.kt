@@ -1,10 +1,14 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.db
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
+import com.augustin26.studyingistiming.Dday
+import com.augustin26.studyingistiming.DdayContent
+import com.augustin26.studyingistiming.StudyData
+import com.augustin26.studyingistiming.TodayTime
 
 @Dao
 interface StudyDAO {

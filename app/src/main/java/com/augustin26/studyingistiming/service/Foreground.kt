@@ -1,8 +1,9 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.service
 
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Binder
 import android.os.Build
 import android.os.CountDownTimer
@@ -11,19 +12,29 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.room.Room
+import com.augustin26.studyingistiming.R
+import com.augustin26.studyingistiming.db.StudyDatabase
+import com.augustin26.studyingistiming.receiver.AlarmReceiver
+import com.augustin26.studyingistiming.ui.CustomB
+import com.augustin26.studyingistiming.ui.MainActivity
 import java.util.*
+import kotlin.properties.Delegates
 
 
 class Foreground : Service() {
 
     val TAG = "Foreground"
 
-    private var mainThread: Thread? = null
     var timer : CountUpTimer? = null
+    var time by Delegates.notNull<Long>()
+
+    private val PREFS_NAME = "_pref_name"
+    private val CURRENT_TIME = "_current_time"
+    private var editor: SharedPreferences.Editor? = null
+    private var sharedPreference: SharedPreferences? = null
 
     val CHANNEL_ID = "FGS153"
     val NOTI_ID = 153
-    var started = false
     var dontDie = false
 
     //Room 변수
@@ -61,26 +72,25 @@ class Foreground : Service() {
 
     private fun startForegroundService(helper: StudyDatabase) {
         createNotificationChannel()
-        started = true
         dontDie = true
-        timer = object : CountUpTimer(86400) {
+        sharedPreference = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        val start = System.currentTimeMillis()
+        val cur = if (getCurrentTime() != 0.toLong()) getCurrentTime() else 0
+
+        // 타이머
+        timer = object : CountUpTimer(864000) {
+
+            // 똑딱똑딱
             override fun onTick(second: Int) {
 
-                val data = helper?.studyDAO()?.getTime()
+                time = cur + ((System.currentTimeMillis() - start) / 1000)
+                setCurrentTime(time)
 
-                var time: Int? = if (data!!.size > 0) {
-                    data!!.get(0).time!!
-                }else{
-                    0
-                }
-
-                time = time!! + 1
-                helper.studyDAO().insertTime(TodayTime(1, time))
-
-                var notiTitle = when (time % 4) {
-                    1-> "공부 중"
-                    2-> "공부 중."
-                    3-> "공부 중.."
+                val notiTitle = when (time % 4.toLong()) {
+                    1.toLong()-> "공부 중"
+                    2.toLong()-> "공부 중."
+                    3.toLong()-> "공부 중.."
                     else-> "공부 중..."
                 }
 
@@ -106,99 +116,53 @@ class Foreground : Service() {
                     .setCustomContentView(layout)
                     .build()
 
-                //val notificationManager =  NotificationManagerCompat.from(this)
-                //notificationManager.notify(NOTI_ID, notification.build())
-
                 startForeground(NOTI_ID, notification)
                 Log.d("서비스","$time")
             }
 
+            // 타이머 종료
             override fun onFinish() {
                 super.onFinish()
 
                 Log.e("Foreground","onFinish")
                 if (dontDie) {
+                    setCurrentTime(time + 1) //시간 오차 조정 (1초)
                     setAlarmTimer()
                     Thread.currentThread().interrupt()
                 }
             }
         }
         timer!!.start()
-
-//        mainThread = thread(start=true) {
-//            while (started) {
-//                Thread.sleep(1000)
-//
-//                val data = helper?.studyDAO()?.getTime()
-//
-//                var time: Int? = if (data!!.size > 0) {
-//                    data!!.get(0).time!!
-//                }else{
-//                    0
-//                }
-//
-//                time = time!! + 1
-//                helper.studyDAO().insertTime(TodayTime(1, time))
-//
-//                var notiTitle = when (time % 4) {
-//                    1-> "공부 중"
-//                    2-> "공부 중."
-//                    3-> "공부 중.."
-//                    else-> "공부 중..."
-//                }
-//
-//                //앱 중복 실행 방지
-//                val intent = Intent(baseContext, MainActivity::class.java)
-//                intent.action = Intent.ACTION_MAIN
-//                intent.addCategory(Intent.CATEGORY_LAUNCHER)
-//                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                val pIntent = PendingIntent.getActivity(baseContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//
-//
-//                //알림 레이어 설정
-//                val layout = RemoteViews(packageName, R.layout.custom_notification)
-//                layout.setTextViewText(R.id.notifyTitle, notiTitle)
-//                layout.setTextViewText(R.id.notifyMessage, formatTime(time))
-//
-//                val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-//                    .setContentTitle("Foreground Service")
-//                    .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                    .setOngoing(true)
-//                    .setContentIntent(pIntent)
-//                    .setAutoCancel(true)
-//                    .setCustomContentView(layout)
-//                    .build()
-//
-//                //val notificationManager =  NotificationManagerCompat.from(this)
-//                //notificationManager.notify(NOTI_ID, notification.build())
-//
-//                startForeground(NOTI_ID, notification)
-//                Log.d("서비스","$time")
-//            }
-//        }
     }
 
     private fun stopForegroundService() {
         timer!!.cancel()
-        started = false
         stopForeground(true)
         stopSelf()
     }
 
     //시간 포맷 함수
-    fun formatTime(time:Int) : String {
+    fun formatTime(time: Long) : String {
         val hour = String.format("%02d", time/(60*60))
         val minute = String.format("%02d", (time/60)%60)
         val second = String.format("%02d", time%60)
         return "$hour:$minute:$second"
     }
 
+    fun setCurrentTime(time : Long) {
+        editor = sharedPreference!!.edit()
+        editor!!.putLong(CURRENT_TIME, time)!!.apply()
+    }
+
+    fun getCurrentTime(): Long {
+        return sharedPreference!!.getLong(CURRENT_TIME, 0)
+    }
 
     fun setAlarmTimer() {
         val c: Calendar = Calendar.getInstance()
         c.setTimeInMillis(System.currentTimeMillis())
         c.add(Calendar.SECOND, 1)
-        val intent = Intent(this, AlarmRecever::class.java)
+        val intent = Intent(this, AlarmReceiver::class.java)
         val sender = PendingIntent.getBroadcast(this, 0, intent, 0)
         val mAlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         mAlarmManager.set(AlarmManager.RTC_WAKEUP, c.timeInMillis, sender)

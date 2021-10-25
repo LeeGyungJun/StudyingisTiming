@@ -1,7 +1,6 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.service
 
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
@@ -9,6 +8,8 @@ import android.util.Log
 import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.augustin26.studyingistiming.R
+import com.augustin26.studyingistiming.ui.MainActivity
 
 class RestartForeground : Service() {
     override fun onCreate() {
@@ -51,7 +52,6 @@ class RestartForeground : Service() {
         val intent = Intent(this, Foreground::class.java)
         intent.action = Actions.START_FOREGROUND
         ContextCompat.startForegroundService(this, intent)
-//        startService(`in`)
         stopForeground(true)
         stopSelf()
         return START_NOT_STICKY

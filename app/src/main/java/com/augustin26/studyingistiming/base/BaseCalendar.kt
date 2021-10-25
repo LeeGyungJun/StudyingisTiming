@@ -1,13 +1,6 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.base
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.room.Room
-import androidx.room.RoomDatabase
 import java.text.SimpleDateFormat
-import java.time.LocalDate.now
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class BaseCalendar() {

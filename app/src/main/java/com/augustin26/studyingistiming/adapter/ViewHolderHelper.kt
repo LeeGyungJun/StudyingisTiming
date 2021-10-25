@@ -1,4 +1,4 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.adapter
 
 
 import android.view.View

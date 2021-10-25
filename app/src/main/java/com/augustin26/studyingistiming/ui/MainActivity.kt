@@ -1,10 +1,13 @@
-package com.augustin26.studyingistiming
+package com.augustin26.studyingistiming.ui
 
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.augustin26.studyingistiming.adapter.CustomPagerAdapter
+import com.augustin26.studyingistiming.R
+import com.augustin26.studyingistiming.receiver.StudyReceiver
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
