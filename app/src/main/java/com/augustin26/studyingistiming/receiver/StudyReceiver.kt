@@ -43,7 +43,7 @@ class StudyReceiver : BroadcastReceiver() {
             val data = StudyData(null, year, month, day, time)
             helper?.studyDAO()?.insertStudy(data)
             helper?.studyDAO()?.insertTime(TodayTime(1,0))
-            Toast.makeText(context, "오늘 공부한 시간을 저장합니다.", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "오늘 공부한 시간을 저장합니다.", Toast.LENGTH_SHORT).show()
             Log.e("broad","data : ${helper?.studyDAO()?.getStudy()}")
             Log.e("broad","time : ${helper?.studyDAO()?.getTime()}")
         }
