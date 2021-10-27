@@ -14,7 +14,7 @@ class YoutubeActivity : YouTubeBaseActivity() {
 
     companion object {
         val VIDEO_ID: String = "5UDKmg3Gl0M";
-        val YOUTUBE_API_KEY: String = "AIzaSyBOHXyP_hrmEHTthvGs5A5cAg2TrFGMlMs"
+        val YOUTUBE_API_KEY: String = ""
     }
 
     lateinit var youtubePlayerInit: YouTubePlayer.OnInitializedListener
