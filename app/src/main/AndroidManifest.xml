@@ -14,7 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyingisTiming">
-        <activity android:name=".ui.YoutubeActivity"></activity>
+        <receiver
+            android:name=".receiver.MyReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
+        <activity android:name=".ui.YoutubeActivity" />
 
         <receiver
             android:name=".receiver.StudyReceiver"

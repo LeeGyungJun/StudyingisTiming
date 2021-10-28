@@ -1,6 +1,7 @@
 package com.augustin26.studyingistiming.service
 
 import android.app.*
+import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,6 +16,8 @@ import androidx.room.Room
 import com.augustin26.studyingistiming.R
 import com.augustin26.studyingistiming.db.StudyDatabase
 import com.augustin26.studyingistiming.receiver.AlarmReceiver
+import com.augustin26.studyingistiming.receiver.MyReceiver
+import com.augustin26.studyingistiming.receiver.StudyReceiver
 import com.augustin26.studyingistiming.ui.CustomB
 import com.augustin26.studyingistiming.ui.MainActivity
 import java.util.*
@@ -95,11 +98,16 @@ class Foreground : Service() {
                 }
 
                 //앱 중복 실행 방지
-                val intent = Intent(baseContext, MainActivity::class.java)
-                intent.action = Intent.ACTION_MAIN
-                intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                val intent = Intent(baseContext, MainActivity::class.java).apply {
+                    action = Intent.ACTION_MAIN
+                    addCategory(Intent.CATEGORY_LAUNCHER)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
                 val pIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+                //Notification Action 쉬는 버튼
+                val testIntent = Intent(baseContext, MyReceiver::class.java)
+                val testPendingIntent : PendingIntent = PendingIntent.getBroadcast(applicationContext, 0, testIntent, FLAG_ONE_SHOT)
 
 
                 //알림 레이어 설정
@@ -108,12 +116,13 @@ class Foreground : Service() {
                 layout.setTextViewText(R.id.notifyMessage, formatTime(time))
 
                 val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-                    .setContentTitle("Foreground Service")
+                    .setContentTitle(null)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setOngoing(true)
                     .setContentIntent(pIntent)
                     .setAutoCancel(true)
                     .setCustomContentView(layout)
+                    .addAction(R.drawable.plus, "쉬는타이밍!", testPendingIntent)
                     .build()
 
                 startForeground(NOTI_ID, notification)
