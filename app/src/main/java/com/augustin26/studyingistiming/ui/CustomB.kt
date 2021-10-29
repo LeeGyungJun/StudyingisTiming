@@ -28,7 +28,7 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
     }
 
 
-    private fun serviceStart() {
+    fun serviceStart() {
         if (isServiceRunningCheck()) {
             return
         }else{

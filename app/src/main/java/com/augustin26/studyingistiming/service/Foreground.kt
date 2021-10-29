@@ -14,10 +14,10 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.room.Room
 import com.augustin26.studyingistiming.R
+import com.augustin26.studyingistiming.TodayTime
 import com.augustin26.studyingistiming.db.StudyDatabase
 import com.augustin26.studyingistiming.receiver.AlarmReceiver
 import com.augustin26.studyingistiming.receiver.MyReceiver
-import com.augustin26.studyingistiming.receiver.StudyReceiver
 import com.augustin26.studyingistiming.ui.CustomB
 import com.augustin26.studyingistiming.ui.MainActivity
 import java.util.*
@@ -29,12 +29,7 @@ class Foreground : Service() {
     val TAG = "Foreground"
 
     var timer : CountUpTimer? = null
-    var time by Delegates.notNull<Long>()
-
-    private val PREFS_NAME = "_pref_name"
-    private val CURRENT_TIME = "_current_time"
-    private var editor: SharedPreferences.Editor? = null
-    private var sharedPreference: SharedPreferences? = null
+    var time by Delegates.notNull<Int>()
 
     val CHANNEL_ID = "FGS153"
     val NOTI_ID = 153
@@ -42,6 +37,9 @@ class Foreground : Service() {
 
     //Room 변수
     var helper : StudyDatabase? = null
+
+    var cur : Int = 0
+    var data : List<TodayTime>? = null
 
     private fun createNotificationChannel() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -59,13 +57,21 @@ class Foreground : Service() {
             .fallbackToDestructiveMigration()
             .build()
 
-        if (intent?.action == CustomB.Actions.START_FOREGROUND) {
-            startForegroundService(helper!!)
-        }else if (intent?.action == CustomB.Actions.STOP_FOREGROUND) {
-            dontDie = false
-            stopForegroundService()
+        Log.e("ACTION","ACTION : ${intent?.action.toString()}")
+        when (intent?.action) {
+
+            CustomB.Actions.START_FOREGROUND -> {
+                startForegroundService(helper!!)
+            }
+
+            CustomB.Actions.STOP_FOREGROUND -> {
+                dontDie = false //의도된 Stop Action 이 들어왔을때만 dontDie를 false
+                stopForegroundService()
+            }
         }
+
         helper!!.close()
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -73,27 +79,32 @@ class Foreground : Service() {
         return Binder()
     }
 
+    // 포그라운듯 서비스 시작
     private fun startForegroundService(helper: StudyDatabase) {
         createNotificationChannel()
         dontDie = true
-        sharedPreference = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
+        //공부 시작 시간
         val start = System.currentTimeMillis()
-        val cur = if (getCurrentTime() != 0.toLong()) getCurrentTime() else 0
 
-        // 타이머
+
+        data = helper.studyDAO().getTime()
+        //공부하던 시간이 있으면 가져오고 아니면 0
+        cur = if (data!!.isNotEmpty()) data!![0].time!! else 0
+
+        // 타이머 (24시간짜리)
         timer = object : CountUpTimer(864000) {
 
             // 똑딱똑딱
             override fun onTick(second: Int) {
+                // 공부하던 시간 + (현재 시간 - 시작한 시간) / 1000
+                time = (cur + (System.currentTimeMillis() - start) / 1000).toInt()
+                helper.studyDAO().insertTime(TodayTime(1, time))
 
-                time = cur + ((System.currentTimeMillis() - start) / 1000)
-                setCurrentTime(time)
-
-                val notiTitle = when (time % 4.toLong()) {
-                    1.toLong()-> "공부 중"
-                    2.toLong()-> "공부 중."
-                    3.toLong()-> "공부 중.."
+                val notiTitle = when (time % 4) {
+                    1-> "공부 중"
+                    2-> "공부 중."
+                    3-> "공부 중.."
                     else-> "공부 중..."
                 }
 
@@ -105,7 +116,7 @@ class Foreground : Service() {
                 }
                 val pIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-                //Notification Action 쉬는 버튼
+                //Notification Action 알림 확장버튼 (쉬는시간 버튼)
                 val testIntent = Intent(baseContext, MyReceiver::class.java)
                 val testPendingIntent : PendingIntent = PendingIntent.getBroadcast(applicationContext, 0, testIntent, FLAG_ONE_SHOT)
 
@@ -122,8 +133,11 @@ class Foreground : Service() {
                     .setContentIntent(pIntent)
                     .setAutoCancel(true)
                     .setCustomContentView(layout)
-                    .addAction(R.drawable.plus, "쉬는타이밍!", testPendingIntent)
+                    .addAction(R.drawable.plus, "쉬는타이밍!", testPendingIntent) //Notification Action 알림 확장 버튼 추가
                     .build()
+
+                //val notificationManager =  NotificationManagerCompat.from(this)
+                //notificationManager.notify(NOTI_ID, notification.build())
 
                 startForeground(NOTI_ID, notification)
                 Log.d("서비스","$time")
@@ -133,40 +147,42 @@ class Foreground : Service() {
             override fun onFinish() {
                 super.onFinish()
 
-                Log.e("Foreground","onFinish")
+                /** 죽지 말라고 했는데 죽었으면
+                 *  setAlarmTimer() 로 다시 서비스 살리기
+                 *  의도적으로 죽인거면 정상적으로 time 저장
+                 */
                 if (dontDie) {
-                    setCurrentTime(time + 1) //시간 오차 조정 (1초)
+                    helper.studyDAO().insertTime(TodayTime(1, time+1)) //시간 오차 조정 (1초)
                     setAlarmTimer()
                     Thread.currentThread().interrupt()
+                }else{
+                    helper.studyDAO().insertTime(TodayTime(1, time))
                 }
             }
         }
         timer!!.start()
     }
 
+    // 포그라운드 서비스 종료
     private fun stopForegroundService() {
-        timer!!.cancel()
+        timer?.cancel()
+        helper?.studyDAO()?.insertTime(TodayTime(1, time))
         stopForeground(true)
         stopSelf()
     }
 
     //시간 포맷 함수
-    fun formatTime(time: Long) : String {
+    fun formatTime(time: Int) : String {
         val hour = String.format("%02d", time/(60*60))
         val minute = String.format("%02d", (time/60)%60)
         val second = String.format("%02d", time%60)
         return "$hour:$minute:$second"
     }
 
-    fun setCurrentTime(time : Long) {
-        editor = sharedPreference!!.edit()
-        editor!!.putLong(CURRENT_TIME, time)!!.apply()
-    }
-
-    fun getCurrentTime(): Long {
-        return sharedPreference!!.getLong(CURRENT_TIME, 0)
-    }
-
+    /**  Immotal Service 시작 부분
+     *   1초짜리 알람 설정하고
+     *   알람이 울리면 서비스 다시 시작하는 로직
+     */
     fun setAlarmTimer() {
         val c: Calendar = Calendar.getInstance()
         c.setTimeInMillis(System.currentTimeMillis())
@@ -179,16 +195,8 @@ class Foreground : Service() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         Log.e(TAG,"onDestroy")
-        if (dontDie) {
-            setAlarmTimer()
-            Thread.currentThread().interrupt()
-//            if (mainThread != null) {
-//                mainThread!!.interrupt();
-//                mainThread = null;
-//            }
-        }
+        super.onDestroy()
     }
 
     abstract class CountUpTimer protected constructor(private val duration: Long) :

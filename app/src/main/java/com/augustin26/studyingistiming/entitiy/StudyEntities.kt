@@ -24,7 +24,7 @@ data class DdayContent (
 )
 
 @Entity(tableName = "today_time")
-data class TodayTime (
+data class TodayTime(
     @PrimaryKey
     @ColumnInfo
     var id: Long? = null,

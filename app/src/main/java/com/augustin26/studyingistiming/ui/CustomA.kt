@@ -74,9 +74,6 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.time.time
-        Log.d("Dday", "${today}")
-        //디데이로 설정한 날짜에서 오늘 날짜를 빼줌
-        val D_day = (day - today) / (24 * 60 * 60 * 1000)
 
 
         //어제 내 공부시간
@@ -85,14 +82,20 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
         if (d3!!.size > 0) {
             yesterdayStudyTime = d3[d3.lastIndex].time
         }
+        val D_day: Long
 
-        //디데이
-        if(D_day > 0) {
-            txtDday.text = "D-${D_day}"
-        } else if (D_day < 0) {
-            txtDday.text = "D+${D_day*(-1)}"
-        } else {
-            txtDday.text = "D-day"
+        if (day != 0.toLong()) {//디데이로 설정한 날짜에서 오늘 날짜를 빼줌
+            D_day = (day - today) / (24 * 60 * 60 * 1000)
+
+            //디데이
+            if(D_day > 0) {
+                txtDday.text = "D-${D_day}"
+            } else if (D_day < 0) {
+                txtDday.text = "D+${D_day*(-1)}"
+            } else {
+                txtDday.text = "D-day"
+            }
+            Log.d("Dday", "${D_day}")
         }
 
         //디데이 내용
@@ -110,7 +113,7 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             val listener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                val dateFormat = SimpleDateFormat("yyyyMMdd")
+                val dateFormat = if (month<9) SimpleDateFormat("yyyyMdd") else SimpleDateFormat("yyyyMMdd")
                 val endDate = dateFormat.parse("${year}${month+1}${day}").time
                 Log.d("Dday","${year}${month+1}${day}")
 

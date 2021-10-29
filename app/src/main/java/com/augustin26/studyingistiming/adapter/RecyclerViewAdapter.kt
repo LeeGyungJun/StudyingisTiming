@@ -82,14 +82,14 @@ class RecyclerViewAdapter(val customC: CustomC) : RecyclerView.Adapter<ViewHolde
         val data = helper?.studyDAO()?.getStudyDate(year, month)
         Log.d("cal", "년 : $year, 월 : $month, 달력빈칸 : ${baseCalendar.prevMonthTailOffset} 데이터 : ${data}")
 
-        if(data != null && data.size != 0) {
+        if(data != null && data.isNotEmpty()) {
             for(i in 0..data.lastIndex) {
                 if(position - baseCalendar.prevMonthTailOffset + 1 == data.get(i).day) {
-                    when (data.get(i).time) {
+                    when (data[i].time?.toInt()) {
                         //1단 : 공부시간이 1시간 ~ 3시간
                         in 3600..10799 -> {
-                            holder.itemView.background = customC.context.resources.getDrawable(R.drawable.phase1)
-                            holder.itemView.tv_date.setTextColor(Color.parseColor("#FFFFFF"))
+                        holder.itemView.background = customC.context.resources.getDrawable(R.drawable.phase1)
+                        holder.itemView.tv_date.setTextColor(Color.parseColor("#FFFFFF"))
                         }
                         //2단 : 공부시간이 3시간 ~ 5시간
                         in 10800..17999 -> {

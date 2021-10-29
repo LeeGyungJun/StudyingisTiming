@@ -1,30 +1,32 @@
 package com.augustin26.studyingistiming.receiver
 
+import android.app.Activity
 import android.app.ActivityManager
-import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
 import android.util.Log
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.room.Room
 import com.augustin26.studyingistiming.Const
 import com.augustin26.studyingistiming.StudyData
-import com.augustin26.studyingistiming.db.StudyDatabase
 import com.augustin26.studyingistiming.TodayTime
+import com.augustin26.studyingistiming.db.StudyDatabase
+import com.augustin26.studyingistiming.service.Foreground
 import com.augustin26.studyingistiming.ui.CustomB
 import com.augustin26.studyingistiming.ui.MainActivity
-import com.augustin26.studyingistiming.util.Utils
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.concurrent.thread
 
 class StudyReceiver : BroadcastReceiver() {
 
     //Room 변수
     private var helper : StudyDatabase? = null
 
-    private val now: Long = System.currentTimeMillis()
+    private val now: Long = System.currentTimeMillis()-10000 // 몇초의 오차때문에 다음날로 저장할 경우를 대비하여 10초 전으로 맞춤
     private val date = Date(now)
     private val dateFormatYear = SimpleDateFormat("yyyy", Locale("ko", "KR"))
     private val dateFormatMonth = SimpleDateFormat("M", Locale("ko", "KR"))
@@ -48,11 +50,17 @@ class StudyReceiver : BroadcastReceiver() {
         if (action.equals(Intent.ACTION_DATE_CHANGED)) {
             val time = helper?.studyDAO()?.getTime()?.get(0)?.time
             val data = StudyData(null, year, month, day, time)
+
+            //오늘 날짜 시간 데이터 저장
             helper?.studyDAO()?.insertStudy(data)
             helper?.studyDAO()?.insertTime(TodayTime(1,0))
+
             //Toast.makeText(context, "오늘 공부한 시간을 저장합니다.", Toast.LENGTH_SHORT).show()
-            Log.e("broad","data : ${helper?.studyDAO()?.getStudy()}")
+            helper?.studyDAO()?.getStudy()?.forEach {
+                Log.e("broad","data : ${it}")
+            }
             Log.e("broad","time : ${helper?.studyDAO()?.getTime()}")
+            Log.e("broad", "year : $year\nmonth : $month\nday : $day")
 
             val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val procInfos = activityManager.runningAppProcesses
@@ -68,5 +76,15 @@ class StudyReceiver : BroadcastReceiver() {
             }
         }
         helper!!.close()
+    }
+
+    fun isServiceRunningCheck(context: Context) : Boolean {
+        val manager: ActivityManager = context.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
+        for (service: ActivityManager.RunningServiceInfo in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("com.augustin26.studyingistiming.service.Foreground" == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 }
