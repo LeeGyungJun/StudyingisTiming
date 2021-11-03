@@ -1,18 +1,22 @@
 package com.augustin26.studyingistiming.ui
 
 import android.animation.ObjectAnimator
+import android.app.Activity
+import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
 import com.augustin26.studyingistiming.Const
 import com.augustin26.studyingistiming.R
+import com.augustin26.studyingistiming.TodayTime
 import com.augustin26.studyingistiming.adapter.CustomPagerAdapter
+import com.augustin26.studyingistiming.db.StudyDatabase
 import com.augustin26.studyingistiming.receiver.StudyReceiver
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,10 +25,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private var isFabOpen = false
+    private var helper : StudyDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //RoomDB 빌드
+        helper = Room.databaseBuilder(this, StudyDatabase::class.java, "study_db")
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
 
         val br : BroadcastReceiver = StudyReceiver()
         val filter = IntentFilter().apply{
@@ -37,9 +48,22 @@ class MainActivity : AppCompatActivity() {
             toggleFab()
         }
 
-        // 플로팅 버튼 클릭 이벤트 - 유튜부
-        fabYoutube.setOnClickListener {
-            //startActivity(Intent(this, YoutubeActivity::class.java))
+        // 플로팅 버튼 클릭 이벤트 - 강제초기화
+        fabEmergencyStop.setOnClickListener {
+            if (isServiceRunningCheck()) {
+                Toast.makeText(this, "타이머를 멈추고 실행해주세요.", Toast.LENGTH_SHORT).show()
+            }else{
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("알림").setMessage("타이머를 강제 초기화하시겠습니까?")
+                builder.setPositiveButton("확인") { dialog, id ->
+                    helper?.studyDAO()?.insertTime(TodayTime(1, 0))
+                    Toast.makeText(this, "타이머를 초기화하였습니다.", Toast.LENGTH_SHORT).show()
+                }
+                builder.setNegativeButton("취소") { dialog, id ->
+                }
+                val alertDialog = builder.create()
+                alertDialog.show()
+            }
         }
     }
 
@@ -51,12 +75,12 @@ class MainActivity : AppCompatActivity() {
 
         // 플로팅 액션 버튼 닫기 - 열려있는 플로팅 버튼 집어넣는 애니메이션 세팅
         if (isFabOpen) {
-            ObjectAnimator.ofFloat(fabYoutube, "translationY", 0f).apply { start() }
+            ObjectAnimator.ofFloat(fabEmergencyStop, "translationY", 0f).apply { start() }
             fabMain.setImageResource(R.drawable.plus)
 
             // 플로팅 액션 버튼 열기 - 닫혀있는 플로팅 버튼 꺼내는 애니메이션 세팅
         } else {
-            ObjectAnimator.ofFloat(fabYoutube, "translationY", -200f).apply { start() }
+            ObjectAnimator.ofFloat(fabEmergencyStop, "translationY", -200f).apply { start() }
             fabMain.setImageResource(R.drawable.close)
         }
 
@@ -93,5 +117,18 @@ class MainActivity : AppCompatActivity() {
         }
         super.onResume()
     }
+
+
+
+    fun isServiceRunningCheck() : Boolean {
+        val manager: ActivityManager = this.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
+        for (service: ActivityManager.RunningServiceInfo in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("com.augustin26.studyingistiming.service.Foreground" == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 
 }

@@ -87,7 +87,6 @@ class Foreground : Service() {
         //공부 시작 시간
         val start = System.currentTimeMillis()
 
-
         data = helper.studyDAO().getTime()
         //공부하던 시간이 있으면 가져오고 아니면 0
         cur = if (data!!.isNotEmpty()) data!![0].time!! else 0

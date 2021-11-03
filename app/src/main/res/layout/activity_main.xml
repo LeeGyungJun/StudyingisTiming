@@ -41,11 +41,11 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabYoutube"
+        android:id="@+id/fabEmergencyStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/youtube"
+        android:src="@drawable/warning"
         app:fabSize="mini"
         app:layout_constraintTop_toTopOf="@id/fabMain"
         app:layout_constraintBottom_toBottomOf="@id/fabMain"
