@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyingisTiming">
-        <receiver android:name=".StudyAppWidget">
+        <receiver android:name=".widget.StudyAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.action.ACTION_BTN_CLICK"/>
@@ -38,11 +38,9 @@
         <activity android:name=".ui.MainActivity" />
 
         <receiver
-            android:name=".receiver.MyReceiver"
+            android:name=".receiver.NotiStopReceiver"
             android:enabled="true"
             android:exported="true" />
-
-        <activity android:name=".ui.YoutubeActivity" />
 
         <receiver
             android:name=".receiver.StudyReceiver"
@@ -64,7 +62,7 @@
         <receiver android:name=".receiver.AlarmReceiver" />
 
         <service
-            android:name=".service.Foreground"
+            android:name=".service.StudyForeground"
             android:enabled="true"
             android:exported="true" />
         <service

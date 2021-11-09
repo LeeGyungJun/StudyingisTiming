@@ -14,7 +14,6 @@ import com.augustin26.studyingistiming.TodayTime
 interface StudyDAO {
 
 
-
     //디데이
     @Query("select * from dday_day")
     fun getDay() : List<Dday>

@@ -11,10 +11,11 @@ import androidx.core.content.ContextCompat
 import com.augustin26.studyingistiming.R
 import com.augustin26.studyingistiming.ui.MainActivity
 
+//StudyForeground를 실행시켜줄 포그라운드 서비스
+
 class RestartForeground : Service() {
     override fun onCreate() {
         super.onCreate()
-
         Log.e("RestartForeground","onCreate")
     }
 
@@ -31,13 +32,7 @@ class RestartForeground : Service() {
         val manager: NotificationManager =
             getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            manager.createNotificationChannel(
-                NotificationChannel(
-                    "default",
-                    "기본 채널",
-                    NotificationManager.IMPORTANCE_NONE
-                )
-            )
+            manager.createNotificationChannel(NotificationChannel("default","기본 채널",NotificationManager.IMPORTANCE_NONE))
         }
         val notification = NotificationCompat.Builder(applicationContext, "default")
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -47,11 +42,12 @@ class RestartForeground : Service() {
             .build()
 
         startForeground(9, notification)
-
-        /////////////////////////////////////////////////////////////////////
-        val intent = Intent(this, Foreground::class.java)
+        //포그라운드 알림이 켜져있는 동안 실행할 작업
+        val intent = Intent(this, StudyForeground::class.java)
         intent.action = Actions.START_FOREGROUND
         ContextCompat.startForegroundService(this, intent)
+
+        //위 작업을 끝내면 자기 자신을 멈춘다.
         stopForeground(true)
         stopSelf()
         return START_NOT_STICKY

@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
-import com.augustin26.studyingistiming.Const
+import com.augustin26.studyingistiming.util.Const
 import com.augustin26.studyingistiming.R
 import com.augustin26.studyingistiming.TodayTime
 import com.augustin26.studyingistiming.adapter.CustomPagerAdapter
@@ -65,6 +65,21 @@ class MainActivity : AppCompatActivity() {
                 alertDialog.show()
             }
         }
+
+        //사용할 뷰 클래스를 모두 생성해서 views 변수에 담는다.
+        val views:List<View> = listOf(CustomA(this), CustomB(this), CustomC(this))
+
+        //커스텀 어댑터를 생성
+        val adapter = CustomPagerAdapter()
+        //생성해둔 뷰 클래스 목록을 adapter에 담는다.
+        adapter.views = views
+        //viewPager에 adapter를 연결한다.
+        viewPager.adapter = adapter
+        tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+        tabLayout.setupWithViewPager(viewPager)
+        tabLayout.getTabAt(0)!!.setIcon(R.drawable.home).text = ""
+        tabLayout.getTabAt(1)!!.setIcon(R.drawable.book).text = ""
+        tabLayout.getTabAt(2)!!.setIcon(R.drawable.calendar).text = ""
     }
 
 
@@ -87,21 +102,8 @@ class MainActivity : AppCompatActivity() {
         isFabOpen = !isFabOpen
 
     }
-    override fun onResume() {
-        //사용할 뷰 클래스를 모두 생성해서 views 변수에 담는다.
-        val views:List<View> = listOf(CustomA(this), CustomB(this), CustomC(this))
 
-        //커스텀 어댑터를 생성
-        val adapter = CustomPagerAdapter()
-        //생성해둔 뷰 클래스 목록을 adapter에 담는다.
-        adapter.views = views
-        //viewPager에 adapter를 연결한다.
-        viewPager.adapter = adapter
-        tabLayout.tabGravity = TabLayout.GRAVITY_FILL
-        tabLayout.setupWithViewPager(viewPager)
-        tabLayout.getTabAt(0)!!.setIcon(R.drawable.home).text = ""
-        tabLayout.getTabAt(1)!!.setIcon(R.drawable.book).text = ""
-        tabLayout.getTabAt(2)!!.setIcon(R.drawable.calendar).text = ""
+    override fun onResume() {
 
         if (intent!=null) {
             if (intent.getBooleanExtra(Const.Receiver.DATE_CHANGE, false)) {
@@ -119,16 +121,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     fun isServiceRunningCheck() : Boolean {
         val manager: ActivityManager = this.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
         for (service: ActivityManager.RunningServiceInfo in manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("com.augustin26.studyingistiming.service.Foreground" == service.service.className) {
+            if ("com.augustin26.studyingistiming.service.StudyForeground" == service.service.className) {
                 return true
             }
         }
         return false
     }
-
 
 }

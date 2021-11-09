@@ -6,13 +6,24 @@
     android:padding="@dimen/widget_margin"
     android:theme="@style/ThemeOverlay.StudyingisTiming.AppWidgetContainer">
 
+<!--    <ImageView-->
+<!--        android:id="@+id/btnStart"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:padding="10dp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:background="@drawable/calendar_radius_full"-->
+<!--        android:src="@drawable/reading" />-->
+
     <ImageButton
         android:id="@+id/btnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/click_study"
-        app:srcCompat="@drawable/studytime" />
+        app:srcCompat="@drawable/studytime"/>
+
 
 </RelativeLayout>

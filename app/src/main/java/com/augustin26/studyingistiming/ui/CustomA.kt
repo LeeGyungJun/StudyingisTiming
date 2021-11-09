@@ -24,7 +24,6 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
     private val DDAY = "_dday"
     private val DDAY_CONTENT = "_dday_content"
 
-
     private var sharedPreference: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null
 
@@ -43,25 +42,6 @@ class CustomA(context: Context?) : ConstraintLayout(context!!) {
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
-
-//        //dday_day 테이블을 조회하여 d1에 저장
-//        val d1 = helper?.studyDAO()?.getDay()
-//        var day: Long? = null
-//        if (d1!!.isNotEmpty()) {
-//            //조회한 테이블(배열)의 사이즈가 0보다 크면
-//            //테이블의 0번째 컬럼(Dday클래스)의 day 값을 day에 저장한다.
-//            day = d1[0].day
-//        }
-//
-//        //dday_content 테이블을 조회하여 d2에 저장
-//        val d2 = helper?.studyDAO()?.getContent()
-//        var content: String? = null
-//        if (d2!!.isNotEmpty()) {
-//            //조회한 테이블(배열)의 사이즈가 0보다 크면
-//            //테이블의 0번째 컬럼(DdayContent클래스)의 content 값을 content에 저장한다.
-//            content = d2[0].content
-//        }
-
 
         //디데이로 설정한 날짜
         val day = sharedPreference!!.getLong(DDAY, 0)

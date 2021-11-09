@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.augustin26.studyingistiming.service.Foreground
+import com.augustin26.studyingistiming.service.StudyForeground
 import com.augustin26.studyingistiming.R
 import kotlinx.android.synthetic.main.layout_b.view.*
 
@@ -32,7 +32,7 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
         if (isServiceRunningCheck()) {
             return
         }else{
-            val intent = Intent(context, Foreground::class.java)
+            val intent = Intent(context, StudyForeground::class.java)
             intent.action = Actions.START_FOREGROUND
             ContextCompat.startForegroundService(context, intent)
             Toast.makeText(context,"공부 시작!!!",Toast.LENGTH_SHORT).show()
@@ -41,7 +41,7 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
 
     fun serviceStop() {
         if (isServiceRunningCheck()) {
-            val intent = Intent(context, Foreground::class.java)
+            val intent = Intent(context, StudyForeground::class.java)
             intent.action = Actions.STOP_FOREGROUND
             ContextCompat.startForegroundService(context, intent)
             Toast.makeText(context,"쉬는 시간!!!",Toast.LENGTH_SHORT).show()
@@ -53,7 +53,7 @@ class CustomB(context: Context?) : ConstraintLayout(context!!) {
     fun isServiceRunningCheck() : Boolean {
         val manager: ActivityManager = context.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
         for (service: ActivityManager.RunningServiceInfo in manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("com.augustin26.studyingistiming.service.Foreground" == service.service.className) {
+            if ("com.augustin26.studyingistiming.service.StudyForeground" == service.service.className) {
                 return true
             }
         }

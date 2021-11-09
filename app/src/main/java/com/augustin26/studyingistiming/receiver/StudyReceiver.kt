@@ -5,28 +5,25 @@ import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.room.Room
-import com.augustin26.studyingistiming.Const
+import com.augustin26.studyingistiming.util.Const
 import com.augustin26.studyingistiming.StudyData
 import com.augustin26.studyingistiming.TodayTime
 import com.augustin26.studyingistiming.db.StudyDatabase
-import com.augustin26.studyingistiming.service.Foreground
-import com.augustin26.studyingistiming.ui.CustomB
 import com.augustin26.studyingistiming.ui.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.concurrent.thread
+
+//DATE_CHANGED 날짜 변경 시 공부한 시간을 저장하는 리시버
 
 class StudyReceiver : BroadcastReceiver() {
 
     //Room 변수
     private var helper : StudyDatabase? = null
 
-    private val now: Long = System.currentTimeMillis()-10000 // 몇초의 오차때문에 다음날로 저장할 경우를 대비하여 10초 전으로 맞춤
+    private val now: Long = System.currentTimeMillis()-10000 // 몇초의 오차때문에 다음날로 저장할 경우를 대비하여 10초 전으로 맞춤 (23시 59분 50초)
     private val date = Date(now)
     private val dateFormatYear = SimpleDateFormat("yyyy", Locale("ko", "KR"))
     private val dateFormatMonth = SimpleDateFormat("M", Locale("ko", "KR"))
@@ -81,7 +78,7 @@ class StudyReceiver : BroadcastReceiver() {
     fun isServiceRunningCheck(context: Context) : Boolean {
         val manager: ActivityManager = context.getSystemService(Activity.ACTIVITY_SERVICE) as ActivityManager
         for (service: ActivityManager.RunningServiceInfo in manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("com.augustin26.studyingistiming.service.Foreground" == service.service.className) {
+            if ("com.augustin26.studyingistiming.service.StudyForeground" == service.service.className) {
                 return true
             }
         }

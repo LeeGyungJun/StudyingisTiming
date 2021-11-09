@@ -1,6 +1,8 @@
 package com.augustin26.studyingistiming.db
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.augustin26.studyingistiming.Dday
 import com.augustin26.studyingistiming.DdayContent
@@ -11,7 +13,6 @@ import com.augustin26.studyingistiming.TodayTime
 abstract class StudyDatabase: RoomDatabase() {
     abstract fun studyDAO() : StudyDAO
 
-    /*
     companion object {
         var INSTANCE : StudyDatabase? = null
 
@@ -29,5 +30,4 @@ abstract class StudyDatabase: RoomDatabase() {
         }
 
     }
-     */
 }

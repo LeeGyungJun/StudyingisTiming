@@ -6,6 +6,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.augustin26.studyingistiming.R
 
+//입구
 class SplashActivity : AppCompatActivity() {
     private var handler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
