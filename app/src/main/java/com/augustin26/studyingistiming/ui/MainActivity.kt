@@ -6,7 +6,9 @@ import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.DialogInterface
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -23,13 +25,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-
+    private val TAG = "MainActivity"
     private var isFabOpen = false
     private var helper : StudyDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+		Log.e(TAG, "BRAND : ${Build.BRAND}")
+        Log.e(TAG, "DEVICE : ${Build.DEVICE}")
+        Log.e(TAG, "MODEL : ${Build.MODEL}")
 
         //RoomDB 빌드
         helper = Room.databaseBuilder(this, StudyDatabase::class.java, "study_db")

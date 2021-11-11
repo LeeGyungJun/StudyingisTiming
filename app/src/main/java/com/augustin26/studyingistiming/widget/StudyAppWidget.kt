@@ -8,12 +8,15 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.RemoteViews
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.augustin26.studyingistiming.R
 import com.augustin26.studyingistiming.service.StudyForeground
 import com.augustin26.studyingistiming.ui.CustomB
+import com.augustin26.studyingistiming.ui.DialogActivity
+import com.google.android.material.snackbar.Snackbar
 
 
 class StudyAppWidget : AppWidgetProvider() {
@@ -35,17 +38,25 @@ class StudyAppWidget : AppWidgetProvider() {
                 val intent = Intent(context, StudyForeground::class.java)
                 intent.action = CustomB.Actions.STOP_FOREGROUND
                 ContextCompat.startForegroundService(context, intent)
-                Toast.makeText(context,"쉬는 시간!!!",Toast.LENGTH_SHORT).show()
+
                 //버튼의 이미지를 공부하는 이미지로
                 remoteViews.setImageViewResource(R.id.btnStart, R.drawable.click_study)
+
+                //홈화면에 띄울 Alert
+                alertActivity(context, "stop")
+                //Toast.makeText(context,"쉬는 시간!!!",Toast.LENGTH_SHORT).show()
             }else{
                 //타이머가 돌지 않는 상태
                 val intent = Intent(context, StudyForeground::class.java)
                 intent.action = CustomB.Actions.START_FOREGROUND
                 ContextCompat.startForegroundService(context, intent)
-                Toast.makeText(context,"공부 시작!!!", Toast.LENGTH_SHORT).show()
+
                 //버튼의 이미지를 쉬는 이미지로
                 remoteViews.setImageViewResource(R.id.btnStart, R.drawable.click_break)
+
+                //홈화면에 띄울 Alert
+                alertActivity(context, "start")
+                //Toast.makeText(context,"공부 시작!!!", Toast.LENGTH_SHORT).show()
             }
             //컴포넌트 선언하고 매니저.updateAppWidget 로 업데이트
             val thisWidget = ComponentName(context, StudyAppWidget::class.java)
@@ -65,6 +76,13 @@ class StudyAppWidget : AppWidgetProvider() {
         val remoteViews = RemoteViews(context.packageName, R.layout.new_app_widget)
         remoteViews.setOnClickPendingIntent(R.id.btnStart, getPendingSelfIntent(context, MyOnClick))
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+    }
+
+    private fun alertActivity(context : Context, s : String) {
+        val intent = Intent(context, DialogActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("study", s)
+        ContextCompat.startActivity(context, intent, null)
     }
 
     protected fun getPendingSelfIntent(context: Context?, action: String?): PendingIntent? {

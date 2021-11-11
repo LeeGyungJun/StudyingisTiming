@@ -14,10 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyingisTiming">
+        <activity android:name=".ui.DialogActivity"
+            android:theme="@android:style/Theme.Dialog"
+            android:launchMode="singleInstance"></activity>
+
         <receiver android:name=".widget.StudyAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.action.ACTION_BTN_CLICK"/>
+                <action android:name="android.action.ACTION_BTN_CLICK" />
             </intent-filter>
 
             <meta-data
@@ -41,7 +45,6 @@
             android:name=".receiver.NotiStopReceiver"
             android:enabled="true"
             android:exported="true" />
-
         <receiver
             android:name=".receiver.StudyReceiver"
             android:enabled="true"
